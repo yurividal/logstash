@@ -67,6 +67,24 @@ services:
         test: ["CMD", "curl", "-f", "-u", "elastic:${ELASTIC_PASSWORD}", "http://kibana:5601"]
         interval: 30s
         timeout: 10s
+  
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.15.2
+    volumes:
+      - metricbeat-data01:/usr/share/metricbeat/data
+      - type: bind
+        source: ./metricbeat/metricbeat.yml
+        target: /usr/share/metricbeat/metricbeat.yml
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      KIBANA_HOST: http://kibana:9200
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+
+    depends_on:
+      - elasticsearch
 
   dashboard-importer:
     image: alpine:latest
@@ -90,3 +108,4 @@ services:
 
 volumes:
   elasticsearch:
+  metricbeat-data01:
