@@ -19,8 +19,8 @@ services:
         source: ./elasticsearch/elasticsearch.yml
         target: /usr/share/elasticsearch/config/elasticsearch.yml
         read_only: true
-      - type: volume
-        source: elasticsearch
+      - type: bind
+        source: /home/sutadmin/DOCKER_STORAGE/elasticsearch
         target: /usr/share/elasticsearch/data
     ports:
       - "9200:9200"
